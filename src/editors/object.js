@@ -777,6 +777,23 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
       }
     }
 
+    if(this.jsoneditor.options.remove_empty_object || this.options.remove_empty_object) {
+      for(var k in result) {
+        if(result[k] instanceof Object){
+          var keys = Object.keys(result[k])
+          var ignore = this.editors[k].schema.options.remove_empty_object_ignore
+          if(ignore){
+            keys = keys.filter(function(value){
+              return !ignore.includes(value);
+            });
+          }
+          if(!keys.length){
+            delete result[k];
+          }
+        }
+      }
+    }
+    
     return result;
   },
   refreshValue: function() {
